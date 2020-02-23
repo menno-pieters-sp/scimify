@@ -664,6 +664,7 @@ class SCIM20
 	
 	public function showServiceProviderConfig()
 	{		
+		header("Content-Type: application/json", true);
 		$payload = array();
 		
 		$payload['schemas'] = array("urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig");
