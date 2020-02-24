@@ -133,7 +133,7 @@ class scimify
 		}elseif(preg_match('/^(.*)\/scim\/v2\/ResourceTypes?$/', @explode("?", $_SERVER['REQUEST_URI'])[0]))
 		{
 			if($_SERVER['REQUEST_METHOD'] == "GET")
-				$scim20->throwError(400, "The requested endpoint is not available.");
+				$scim20->showResourceTypes();
 			else
 				$scim20->throwError(405, "The endpoint does not support the provided method.");
 		}elseif(preg_match('/^(.*)\/scim\/v2\/Schemas?$/', @explode("?", $_SERVER['REQUEST_URI'])[0]))
