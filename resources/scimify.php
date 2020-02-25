@@ -141,6 +141,11 @@ class scimify
                 $scim20->showSchemas();
             else
                 $scim20->throwError(405, "The endpoint does not support the provided method.");
+        } elseif (preg_match('/^(.*)\/scim\/v2\/Schemas?\/[A-Za-z0-9_.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+            if ($_SERVER['REQUEST_METHOD'] == "GET")
+                $scim20->showSchema(substr($path, (strrpos($path, "/") + 1)));
+                else
+                    $scim20->throwError(405, "The endpoint does not support the provided method.");
         } elseif (preg_match('/^(.*)\/scim\/v2\/Bulk?$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
             if ($_SERVER['REQUEST_METHOD'] == "POST")
                 $scim20->throwError(400, "The requested endpoint is not available.");
