@@ -834,7 +834,7 @@ class SCIM20
     }
     
     public function getSchemaData($schemaType) {
-        if (!is_null($schemaType) && array_key_exists($schemaType)) {
+        if (!is_null($schemaType) && array_key_exists($schemaType, $this->schemaFiles)) {
             $schemaFileName = $this->schemaFiles[$schemaType];
             if (file_exists($schemaFileName)) {
                 return json_decode(file_get_contents($schemaFileName), TRUE);
