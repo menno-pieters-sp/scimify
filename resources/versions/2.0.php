@@ -857,6 +857,12 @@ class SCIM20
         $payload = array();
         
         $schemas = [];
+        foreach ($this->schemaFiles as $schemaType) {
+            $schema = getSchemaData($schemaType);
+            if (!is_null($schema)) {
+                array_push($schemas, $schema);
+            }
+        }
         
         $payload['totalResults'] = count($schemas);
         $payload['schemas'] = array(
