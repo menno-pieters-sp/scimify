@@ -12,6 +12,11 @@ class SCIM20
 {
 
     protected $db;
+    
+    protected $schemaFiles = array(
+        "urn:ietf:params:scim:schemas:sailpoint:1.0:User" => "schema/2.0/user_schema.json",
+        "urn:ietf:params:scim:schemas:sailpoint:1.0:Group" => "schema/2.0/group_schema.json",
+    );
 
     function __construct()
     {
@@ -826,6 +831,41 @@ class SCIM20
         $payload['Resources'] = $resources;
 
         echo json_encode($payload);
+    }
+    
+    public function getSchemaData($schemaType) {
+        if (!is_null($schemaType) && array_key_exists($schemaType)) {
+            $schemaFileName = $this->schemaFiles[$schemaType];
+            if (file_exists($schemaFileName)) {
+                return json_decode(file_get_contents($schemaFileName), TRUE);
+            }
+        }
+        return NULL;
+    }
+    
+    public function showSchema($schemaType) {
+        $schemaData = getSchemaData($schemaType);
+        if (is_null($schemaData)) {
+            $this->throwError(404, "Resource " . $schemaType . " not found");
+        }
+        header("Content-Type: application/json", true);
+        echo json_encode($schemaData);
+    }
+    
+    public function showSchemas() {
+        header("Content-Type: application/json", true);
+        $payload = array();
+        
+        $schemas = [];
+        
+        $payload['totalResults'] = count($schemas);
+        $payload['schemas'] = array(
+            "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+        );
+        $payload['Resources'] = $schemas;
+        
+        echo json_encode($payload);
+        
     }
 
     public function throwError($statusCode, $description)
