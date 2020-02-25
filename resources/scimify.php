@@ -130,7 +130,7 @@ class scimify
                 $scim20->showResourceTypes();
             else
                 $scim20->throwError(405, "The endpoint does not support the provided method.");
-        } elseif (preg_match('/^(.*)\/scim\/v2\/ResourceTypes\/[A-Za-z0-9_.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+        } elseif (preg_match('/^(.*)\/scim\/v2\/ResourceTypes\/[A-Za-z0-9_:\.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
             if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $scim20->showResourceType(substr($path, (strrpos($path, "/") + 1)));
             } else {
@@ -141,7 +141,7 @@ class scimify
                 $scim20->showSchemas();
             else
                 $scim20->throwError(405, "The endpoint does not support the provided method.");
-        } elseif (preg_match('/^(.*)\/scim\/v2\/Schemas?\/[A-Za-z0-9_.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+        } elseif (preg_match('/^(.*)\/scim\/v2\/Schemas?\/[A-Za-z0-9_:\.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
             if ($_SERVER['REQUEST_METHOD'] == "GET")
                 $scim20->showSchema(substr($path, (strrpos($path, "/") + 1)));
                 else

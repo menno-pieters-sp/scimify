@@ -13,6 +13,9 @@ define("SCIMIFY_DB_USERNAME", "root");
 define("SCIMIFY_DB_PASSWORD", "");
 define("SCIMIFY_DB_SERVER", "localhost");
 define("SCIMIFY_DB_NAME", "scimify");
+define("ENABLE_BASIC_AUTH", true);
+define("BASIC_AUTH_USER", "scimadmin");
+define("BASIC_AUTH_PASS", "{SHA256}Hi4JU9964ea9ee4ae4ce0291324e9e027630f09798d24e891f87a226903113e9cee5359"); // "admin"
 
 /* Other configuration */
 error_reporting(0);

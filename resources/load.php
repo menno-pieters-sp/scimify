@@ -8,6 +8,7 @@
  * recommend testing scripts in a preview environment if possible.
  */
 include "config.php";
+include "core/auth.php";
 include "core/database.php";
 include "versions/1.1.php";
 include "versions/2.0.php";
