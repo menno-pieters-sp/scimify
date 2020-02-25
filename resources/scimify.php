@@ -13,6 +13,7 @@ class scimify
 	{
 		$scim11 = new SCIM11();
 		$scim20 = new SCIM20();
+		$path = @explode("?",$_SERVER['REQUEST_URI'])[0];
 		
 		/* SCIM 1.1 */
 		if(preg_match('/^(.*)\/scim\/v1\/Users\/[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$/', @explode("?", $_SERVER['REQUEST_URI'])[0]))
@@ -136,6 +137,14 @@ class scimify
 				$scim20->showResourceTypes();
 			else
 				$scim20->throwError(405, "The endpoint does not support the provided method.");
+		}elseif(preg_match('/^(.*)\/scim\/v2\/ResourceTypes\/[A-Za-z0-9_.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0]))
+		{
+			if($_SERVER['REQUEST_METHOD'] == "GET")
+			{
+				$scim20->showResourceType(substr($path, (strrpos($path,"/")+1) ));
+			} else {
+				$scim20->throwError(405, "The endpoint does not support the provided method.");
+			}
 		}elseif(preg_match('/^(.*)\/scim\/v2\/Schemas?$/', @explode("?", $_SERVER['REQUEST_URI'])[0]))
 		{
 			if($_SERVER['REQUEST_METHOD'] == "GET")

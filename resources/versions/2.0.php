@@ -682,6 +682,59 @@ class SCIM20
 		echo json_encode($payload);
 	}
 
+	public function getUserResource() {
+		$thisUrl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                $slashPos = strrpos($thisUrl, "/");
+		$baseUrl = substr($thisUrl, 0, $slashPos);
+
+		$userResource = array();
+		$userResource['schema'] = "urn:ietf:params:scim:schemas:core:2.0:User";
+		$userResource['endpoint'] = "/Users";
+		$userResource['meta'] = array(
+			"location" => $baseUrl . "/User",
+			"resourceType" => "ResourceType"
+		);
+		$userResource['name'] = "User";
+		$userResource['description'] = "User Account";
+		$userResource['schemaExtensions'] = [];
+		$userResource['id'] = "User";
+
+		return $userResource;
+	}
+
+	public function getGroupResource() {
+		$thisUrl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                $slashPos = strrpos($thisUrl, "/");
+		$baseUrl = substr($thisUrl, 0, $slashPos);
+
+		$groupResource = array();
+		$groupResource['schema'] = "urn:ietf:params:scim:schemas:core:2.0:User";
+		$groupResource['endpoint'] = "/Groups";
+		$groupResource['meta'] = array(
+			"location" => $baseUrl . "/Group",
+			"resourceType" => "ResourceType"
+		);
+		$groupResource['name'] = "Group";
+		$groupResource['description'] = "User Group";
+		$groupResource['schemaExtensions'] = [];
+		$groupResource['id'] = "Group";
+
+		return $groupResource;
+	}
+
+	public function showResourceType($resourceType) {
+		$resourceData = "";
+		if ($resourceType === "User") {
+			$resourceData = $this->getUserResource();
+		} elseif ($resourceType === "Group") {
+			$resourceData = $this->getGroupResource();
+		} else {
+			$this->throwError(404, "Resource " . $resourceType . " not found");
+		}
+		header("Content-Type: application/json", true);
+		echo json_encode($resourceData);
+	}
+
 	public function showResourceTypes()
 	{
 		header("Content-Type: application/json", true);
@@ -693,32 +746,10 @@ class SCIM20
 
 		$resources = [];
 
-		$userResource = array();
-		$userResource['schema'] = "urn:ietf:params:scim:schemas:core:2.0:User";
-		$userResource['endpoint'] = "/Users";
-		$userResource['meta'] = array(
-			"location" => $baseUrl . "/Users",
-			"resourceType" => "ResourceType"
-		);
-		$userResource['name'] = "User";
-		$userResource['description'] = "User Account";
-		$userResource['schemaExtensions'] = [];
-		$userResource['id'] = "User";
-
+		$userResource = $this->getUserResource();
 		array_push($resources, $userResource);
 
-		$groupResource = array();
-		$groupResource['schema'] = "urn:ietf:params:scim:schemas:core:2.0:User";
-		$groupResource['endpoint'] = "/Groups";
-		$groupResource['meta'] = array(
-			"location" => $baseUrl . "/Groups",
-			"resourceType" => "ResourceType"
-		);
-		$groupResource['name'] = "Group";
-		$groupResource['description'] = "User Group";
-		$groupResource['schemaExtensions'] = [];
-		$groupResource['id'] = "Group";
-
+		$groupResource = $this->getGroupResource();
 		array_push($resources, $groupResource);
 
 		$payload['totalResults'] = count($resources);
