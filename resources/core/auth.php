@@ -8,7 +8,7 @@ class Authentication
         $username = NULL;
         $password = NULL;
 
-        $authenticated == false;
+        $authenticated = false;
 
         if (ENABLE_BASIC_AUTH !== false && ENABLE_BEARER_AUTH !== true) {
             $$authenticated = true;
@@ -22,7 +22,7 @@ class Authentication
                 $password = $_SERVER['PHP_AUTH_PW'];
             }
             if (isset($username) && isset($password) && !is_null($username) && !is_null($password)) {
-                $authenticated = basicAuthentication($username, $password);
+                $authenticated = $this->basicAuthentication($username, $password);
             }
         }
         
@@ -96,7 +96,7 @@ class Authentication
                 $p = strpos($hashedPassWithoutPrefix, '$');
                 if ($p > 0) {
                     $salt = substr($hashedPassWithoutPrefix, 0, $p);
-                    $hashResult = createSHA256Password($salt, $pass);
+                    $hashResult = $this->createSHA256Password($salt, $pass);
                     $result = ($hashedPass === $hashResult);
                 }
             }
