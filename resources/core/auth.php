@@ -41,7 +41,7 @@ class Authentication
                 if ($this->isSHA256Password(BASIC_AUTH_PASS)) {
                     $success = $this->authSHA256Password(BASIC_AUTH_PASS, $password);
                 } else {
-                    $success =$this->authPlainPassword(BASIC_AUTH_PASS, $password);
+                    $success = $this->authPlainPassword(BASIC_AUTH_PASS, $password);
                 }
             }
             return $success;
@@ -91,7 +91,7 @@ class Authentication
         $PREFIX = '{SSHA256}';
         $result = false;
         if ($hashedPass && $pass) {
-            if (isSHA256Password($hashedPass)) {
+            if ($this->isSHA256Password($hashedPass)) {
                 $hashedPassWithoutPrefix = substr($hashedPass, strlen($PREFIX));
                 $p = strpos($hashedPassWithoutPrefix, '$');
                 if ($p > 0) {
