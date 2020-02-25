@@ -783,10 +783,10 @@ class SCIM20
         $baseUrl = substr($thisUrl, 0, $slashPos);
 
         $groupResource = array();
-        $groupResource['schema'] = "urn:ietf:params:scim:schemas:core:2.0:User";
+        $groupResource['schema'] = "urn:ietf:params:scim:schemas:core:2.0:Group";
         $groupResource['endpoint'] = "/Groups";
         $groupResource['meta'] = array(
-            "location" => $baseUrl . "/Group",
+            "location" => $baseUrl . "/Groups",
             "resourceType" => "ResourceType"
         );
         $groupResource['name'] = "Group";
