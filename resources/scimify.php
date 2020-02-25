@@ -17,8 +17,16 @@ class scimify
         $scim20 = new SCIM20();
         $path = @explode("?", $_SERVER['REQUEST_URI'])[0];
 
+        if (preg_match('/^(.*)\/oauth2\/token$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                // generate bearer token
+            } else {
+                // throw some error
+            }
+        } 
+        
         /* SCIM 1.1 */
-        if (preg_match('/^(.*)\/scim\/v1\/Users\/[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+        elseif (preg_match('/^(.*)\/scim\/v1\/Users\/[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
             if ($_SERVER['REQUEST_METHOD'] == "GET")
                 $scim11->getUser(explode("/", explode("?", $_SERVER['REQUEST_URI'])[0])[count(explode("/", @explode("?", $_SERVER['REQUEST_URI'])[0])) - 1], file_get_contents('php://input'));
             elseif ($_SERVER['REQUEST_METHOD'] == "PUT")
@@ -144,8 +152,8 @@ class scimify
         } elseif (preg_match('/^(.*)\/scim\/v2\/Schemas?\/[A-Za-z0-9_:\.-]+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
             if ($_SERVER['REQUEST_METHOD'] == "GET")
                 $scim20->showSchema(substr($path, (strrpos($path, "/") + 1)));
-                else
-                    $scim20->throwError(405, "The endpoint does not support the provided method.");
+            else
+                $scim20->throwError(405, "The endpoint does not support the provided method.");
         } elseif (preg_match('/^(.*)\/scim\/v2\/Bulk?$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
             if ($_SERVER['REQUEST_METHOD'] == "POST")
                 $scim20->throwError(400, "The requested endpoint is not available.");

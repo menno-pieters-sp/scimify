@@ -5,15 +5,31 @@ class Authentication
 
     function __construct()
     {
+        if (preg_match('/^(.*)\/scim\/.+$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+            $this->scimAuth();
+        } elseif (preg_match('/^(.*)\/oauth2/token$/', @explode("?", $_SERVER['REQUEST_URI'])[0])) {
+            $this->oauthTokenAuth();
+        }
+    }
+    
+    protected function oauthTokenAuth() {
+        if (ENABLE_BEARER_AUTH !== true) {
+            header('HTTP/1.0 500 Internal Server Error');
+            echo "Bearer authentication not configured";
+            exit();
+        }
+    }
+    
+    protected function scimAuth() {
         $username = NULL;
         $password = NULL;
-
+        
         $authenticated = false;
-
+        
         if (ENABLE_BASIC_AUTH !== false && ENABLE_BEARER_AUTH !== true) {
             $$authenticated = true;
         }
-
+        
         if (ENABLE_BASIC_AUTH === true) {
             if (isset($_SERVER['PHP_AUTH_USER'])) {
                 $username = $_SERVER['PHP_AUTH_USER'];

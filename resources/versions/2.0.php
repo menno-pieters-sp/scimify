@@ -739,18 +739,21 @@ class SCIM20
         $payload['etag'] = array(
             "supported" => true
         );
-        $payload['authenticationSchemes'] = array(
-            array(
+        $payload['authenticationSchemes'] = array();
+        if (ENABLE_BEARER_AUTH) {
+            array_push($payload['authenticationSchemes'], array(
                 "name" => "OAuth Bearer Token",
                 "description" => "Authentication Scheme using the OAuth Bearer Token Standard",
                 "type" => "oauthbearertoken"
-            ),
-            array(
+            ));
+        }
+        if (ENABLE_BASIC_AUTH) {
+            array_push($payload['authenticationSchemes'], array(
                 "name" => "HTTP Basic",
                 "description" => "Authentication Scheme using the Http Basic Standard",
                 "type" => "httpbasic"
-            )
-        );
+            ));
+        }
 
         echo json_encode($payload);
     }
