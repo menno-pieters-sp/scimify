@@ -185,7 +185,7 @@ class SCIM20
         foreach ($users as $user)
             $payload['Resources'][] = json_decode($this->getUser($user, 1));
 
-        header("Content-Type: application/json", true, $statusCode);
+        header("Content-Type: application/json", true, 200);
         echo preg_replace('/[\x00-\x1F\x7F]/u', '', json_encode($payload, JSON_UNESCAPED_SLASHES));
     }
 
@@ -227,7 +227,7 @@ class SCIM20
     public function patchUser($requestBody, $userID)
     {
         $requestBody = json_decode($requestBody, 1);
-        $userAttributes = $this->db->getResourceAttributes($userID);
+        //$userAttributes = $this->db->getResourceAttributes($userID);
 
         foreach ($requestBody as $key => $value) {
             if (in_array($key, array(
@@ -574,14 +574,14 @@ class SCIM20
         foreach ($groups as $group)
             $payload['Resources'][] = json_decode($this->getGroup($group, 1));
 
-        header("Content-Type: application/json", true, $statusCode);
+        header("Content-Type: application/json", true, 200);
         echo preg_replace('/[\x00-\x1F\x7F]/u', '', json_encode($payload, JSON_UNESCAPED_SLASHES));
     }
 
     public function patchGroup($requestBody, $groupID)
     {
         $requestBody = json_decode($requestBody, 1);
-        $groupAttributes = $this->db->getResourceAttributes($groupID);
+        //$groupAttributes = $this->db->getResourceAttributes($groupID);
 
         foreach ($requestBody as $key => $value) {
             if (in_array($key, array(
@@ -810,10 +810,6 @@ class SCIM20
     {
         header("Content-Type: application/json", true);
         $payload = array();
-
-        $thisUrl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-        $slashPos = strrpos($thisUrl, "/");
-        $baseUrl = substr($thisUrl, 0, $slashPos);
 
         $resources = [];
 
