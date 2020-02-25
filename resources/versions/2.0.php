@@ -15,7 +15,7 @@ class SCIM20
     
     protected $schemaFiles = array(
         "urn:ietf:params:scim:schemas:sailpoint:1.0:User" => "resources/versions/schema/2.0/user_schema.json",
-        "urn:ietf:params:scim:schemas:sailpoint:1.0:Group" => "resource/versions/schema/2.0/group_schema.json",
+        "urn:ietf:params:scim:schemas:sailpoint:1.0:Group" => "resources/versions/schema/2.0/group_schema.json"
     );
 
     function __construct()
@@ -844,9 +844,9 @@ class SCIM20
     }
     
     public function showSchema($schemaType) {
-        $schemaData = getSchemaData($schemaType);
+        $schemaData = $this->getSchemaData($schemaType);
         if (is_null($schemaData)) {
-            $this->throwError(404, "Resource " . $schemaType . " not found");
+            $this->throwError(404, "Schema " . $schemaType . " not found");
         }
         header("Content-Type: application/json", true);
         echo json_encode($schemaData);
@@ -857,8 +857,8 @@ class SCIM20
         $payload = array();
         
         $schemas = [];
-        foreach ($this->schemaFiles as $schemaType) {
-            $schema = getSchemaData($schemaType);
+        foreach ($this->schemaFiles as $schemaType => $schemaFile) {
+            $schema = $this->getSchemaData($schemaType);
             if (!is_null($schema)) {
                 array_push($schemas, $schema);
             }
