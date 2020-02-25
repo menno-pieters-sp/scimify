@@ -14,8 +14,8 @@ class SCIM20
     protected $db;
     
     protected $schemaFiles = array(
-        "urn:ietf:params:scim:schemas:sailpoint:1.0:User" => "resources/versions/schema/2.0/user_schema.json",
-        "urn:ietf:params:scim:schemas:sailpoint:1.0:Group" => "resources/versions/schema/2.0/group_schema.json"
+        "urn:ietf:params:scim:schemas:core:2.0:User" => "resources/versions/schema/2.0/user_schema.json",
+        "urn:ietf:params:scim:schemas:core:2.0:Group" => "resources/versions/schema/2.0/group_schema.json"
     );
 
     function __construct()
