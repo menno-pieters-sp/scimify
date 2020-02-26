@@ -12,7 +12,7 @@ class SCIM20
 {
 
     protected $db;
-    
+
     protected $schemaFiles = array(
         "urn:ietf:params:scim:schemas:core:2.0:User" => "resources/versions/schema/2.0/user_schema.json",
         "urn:ietf:params:scim:schemas:core:2.0:Group" => "resources/versions/schema/2.0/group_schema.json"
@@ -232,7 +232,7 @@ class SCIM20
     public function patchUser($requestBody, $userID)
     {
         $requestBody = json_decode($requestBody, 1);
-        //$userAttributes = $this->db->getResourceAttributes($userID);
+        // $userAttributes = $this->db->getResourceAttributes($userID);
 
         foreach ($requestBody as $key => $value) {
             if (in_array($key, array(
@@ -586,7 +586,7 @@ class SCIM20
     public function patchGroup($requestBody, $groupID)
     {
         $requestBody = json_decode($requestBody, 1);
-        //$groupAttributes = $this->db->getResourceAttributes($groupID);
+        // $groupAttributes = $this->db->getResourceAttributes($groupID);
 
         foreach ($requestBody as $key => $value) {
             if (in_array($key, array(
@@ -739,18 +739,21 @@ class SCIM20
         $payload['etag'] = array(
             "supported" => true
         );
-        $payload['authenticationSchemes'] = array(
-            array(
+        $payload['authenticationSchemes'] = array();
+        if (ENABLE_BEARER_AUTH) {
+            array_push($payload['authenticationSchemes'], array(
                 "name" => "OAuth Bearer Token",
                 "description" => "Authentication Scheme using the OAuth Bearer Token Standard",
                 "type" => "oauthbearertoken"
-            ),
-            array(
+            ));
+        }
+        if (ENABLE_BASIC_AUTH) {
+            array_push($payload['authenticationSchemes'], array(
                 "name" => "HTTP Basic",
                 "description" => "Authentication Scheme using the Http Basic Standard",
                 "type" => "httpbasic"
-            )
-        );
+            ));
+        }
 
         echo json_encode($payload);
     }
@@ -832,9 +835,10 @@ class SCIM20
 
         echo json_encode($payload);
     }
-    
-    public function getSchemaData($schemaType) {
-        if (!is_null($schemaType) && array_key_exists($schemaType, $this->schemaFiles)) {
+
+    public function getSchemaData($schemaType)
+    {
+        if (! is_null($schemaType) && array_key_exists($schemaType, $this->schemaFiles)) {
             $schemaFileName = $this->schemaFiles[$schemaType];
             if (file_exists($schemaFileName)) {
                 return json_decode(file_get_contents($schemaFileName), TRUE);
@@ -842,8 +846,9 @@ class SCIM20
         }
         return NULL;
     }
-    
-    public function showSchema($schemaType) {
+
+    public function showSchema($schemaType)
+    {
         $schemaData = $this->getSchemaData($schemaType);
         if (is_null($schemaData)) {
             $this->throwError(404, "Schema " . $schemaType . " not found");
@@ -851,27 +856,27 @@ class SCIM20
         header("Content-Type: application/json", true);
         echo json_encode($schemaData);
     }
-    
-    public function showSchemas() {
+
+    public function showSchemas()
+    {
         header("Content-Type: application/json", true);
         $payload = array();
-        
+
         $schemas = [];
         foreach ($this->schemaFiles as $schemaType => $schemaFile) {
             $schema = $this->getSchemaData($schemaType);
-            if (!is_null($schema)) {
+            if (! is_null($schema)) {
                 array_push($schemas, $schema);
             }
         }
-        
+
         $payload['totalResults'] = count($schemas);
         $payload['schemas'] = array(
             "urn:ietf:params:scim:api:messages:2.0:ListResponse"
         );
         $payload['Resources'] = $schemas;
-        
+
         echo json_encode($payload);
-        
     }
 
     public function throwError($statusCode, $description)
